@@ -41,10 +41,10 @@ class Conexiones
   class tipocargos extends Conexiones
   {
 
-    public function __construct()
+    /*public function __construct()
     {
       parent::__construct();
-    }
+    }*/
     public function getAll(): array
     {
         $query = "SELECT * FROM informacion ORDER BY nombre ";
@@ -95,25 +95,4 @@ class Conexiones
 $mostrarconexion = new tipocargos();
 $data = $mostrarconexion->getAll();
 $mostrarconexion->showTable($data); //imprimirá conectado*/
-
-echo "\n";
-class MyClass
-{
-    public $public = 'Public';
-    protected $protected = 'Protected';
-    private $private = 'Private';
-
-    public function printHello()
-    {
-        echo $this->public;
-        echo $this->protected;
-        echo $this->private;
-    }
-}
-
-$obj = new MyClass();
-echo $obj->public."\n";    // Funciona bien
-/*echo $obj->protected; // Error Fatal
-echo $obj->private;   // Error Fatal*/
-$obj->printHello();   // Muestra Public, Protected y Private
 ?>
