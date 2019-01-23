@@ -108,7 +108,7 @@ class Cargo extends Conexion
     public function showSelect(array $array): string
     {
         $listas = '<option value="0">Elige una opción</option>';
-        while($row = $array->fetch_array(MYSQLI_ASSOC))
+        foreach($array as $row)
         {
             $listas .= "<option value='$row[nIdTipo]'>$row[cNomTipo]</option>";
         }
