@@ -1,7 +1,6 @@
 <?php
-class Conexiones
+class Conexion
 {
-
     protected $db;
     public function __construct()
     {
@@ -12,7 +11,7 @@ class Conexiones
         try
         {
           $HOST   = '127.0.0.1';
-              $DBNAME = 'personas';
+              $DBNAME = 'cural';
               $USER   = 'root';
               $PASS   = '';
               $con    = new PDO("mysql:host={$HOST}; dbname={$DBNAME}", $USER, $PASS);
@@ -29,25 +28,35 @@ class Conexiones
     {
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
-    protected function ConsultaCompleja(string $where, array $array): array
+    protected function ConsultaCompleja(array $array): array
     {
-        $query  = "SELECT * FROM informacion {$where}";
+        $query  = "SELECT * FROM T002TIPO";
         $result = $this->db->prepare($query);
         $result->execute($array);
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
-  }
+    protected function CSCargo(string $query): array
+    {
+        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    }
+    protected function CCCargo(array $array): array
+    {
+        $query  = "SELECT * FROM T002TIPO";
+        $result = $this->db->prepare($query);
+        $result->execute($array);
+        return $result->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
 
-  class tipocargos extends Conexiones
-  {
-
-    /*public function __construct()
+class tipocargos extends Conexion
+{
+  /*public function __construct()
     {
       parent::__construct();
     }*/
     public function getAll(): array
     {
-        $query = "SELECT * FROM informacion ORDER BY nombre ";
+        $query = "SELECT * FROM T002TIPO ORDER BY nIdTipo ";
         return $this->ConsultaSimple($query);
     }
     public function showTable(array $array): string
@@ -58,26 +67,22 @@ class Conexiones
                         <thead>
                             <th class="d-none"></th>
                             <th>NOMBRE</th>
-                            <th>PAÍS</th>
-                            <th>EDAD</th>
+                            <th>DESCRIPCION</th>
                             <th>OPCIONES</th>
                         </thead>
-
                         <tbody>
                      ';
             foreach ($array as $value) {
                 $html .= '  <tr>
-                        <td class="d-none">' . $value['id'] . '</td>
-                        <td>' . $value['nombre'] . '</td>
-                        <td>' . $value['pais'] . '</td>
-                        <td>' . $value['edad'] . '</td>
+                        <td class="d-none">' . $value['nIdTipo'] . '</td>
+                        <td>' . $value['cNomTipo'] . '</td>
+                        <td>' . $value['cDesTipo'] . '</td>
                         <td class="text-center">
                             <button title="Editar este usuario" class="editar btn btn-secondary" data-toggle="modal" data-target="#ventanaModal">
-                                 <i class="fa fa-pencil-square-o"></i>
+                                 Editar USUARIO<i class="fa fa-pencil-square-o"></i>
                             </button>
-
                             <button title="Eliminar este usuario" type="button" class="eliminar btn btn-danger" data-toggle="modal" data-target="#ventanaModal">
-                                <i class="fa fa-trash-o"></i>
+                                Eliminar Usuario<i class="fa fa-trash-o"></i>
                             </button>
                         </td>
                         </tr>
@@ -90,9 +95,36 @@ class Conexiones
         }
         return $html;
     }
-  }
+}
+
+class Cargo extends Conexion
+{
+    public function getSelect(): array
+    {
+        $query = "SELECT * FROM T002TIPO";
+        return $this->CSCargo($query);
+        
+    }
+    public function showSelect(array $array): string
+    {
+        $listas = '<option value="0">Elige una opción</option>';
+        while($row = $array->fetch_array(MYSQLI_ASSOC))
+        {
+            $listas .= "<option value='$row[nIdTipo]'>$row[cNomTipo]</option>";
+        }
+        return $listas;
+    }
+  
+}
+
+$mostrarcargo = new Cargo();
+$select = $mostrarcargo->getSelect();
+
+echo $mostrarcargo->showSelect($select);
 
 $mostrarconexion = new tipocargos();
 $data = $mostrarconexion->getAll();
-$mostrarconexion->showTable($data); //imprimirá conectado*/
+
+echo $mostrarconexion->showTable($data); //imprimirá conectado*/
+
 ?>
